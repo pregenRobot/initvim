@@ -14,7 +14,13 @@ Plug 'airblade/vim-gitgutter'
 Plug 'preservim/nerdcommenter'
 Plug 'Yggdroot/indentLine'
 Plug 'UnikMask/iroh-vim'
-Plug 'pseewald/vim-anyfold'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'peitalin/vim-jsx-typescript'
+Plug 'pantharshit00/vim-prisma'
+Plug 'prettier/vim-prettier', {
+  \ 'do': 'yarn install --frozen-lockfile --production',
+  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'svelte', 'yaml', 'html'] }
 call plug#end()
 
 
@@ -33,6 +39,32 @@ let g:indentLine_setColors = 0
 let g:indentLine_char = '┆'
 
 " ========== BEHAVIOURS ==========
+if exists('+colorcolumn')
+  function! s:DimInactiveWindows()
+    for i in range(1, tabpagewinnr(tabpagenr(), '$'))
+      let l:range = ""
+      if i != winnr()
+        if &wrap
+         " HACK: when wrapping lines is enabled, we use the maximum number
+         " of columns getting highlighted. This might get calculated by
+         " looking for the longest visible line and using a multiple of
+         " winwidth().
+         let l:width=256 " max
+        else
+         let l:width=winwidth(i)
+        endif
+        let l:range = join(range(1, l:width), ',')
+      endif
+      call setwinvar(i, '&colorcolumn', l:range)
+    endfor
+  endfunction
+  augroup DimInactiveWindows
+    au!
+    au WinEnter * call s:DimInactiveWindows()
+    au WinEnter * set cursorline
+    au WinLeave * set nocursorline
+  augroup END
+endif
 
 set encoding=utf-8
 set hidden
@@ -41,20 +73,35 @@ set nowritebackup
 set cmdheight=2 
 set updatetime=300 
 set clipboard+=unnamedplus
-set tabstop=4
+set tabstop=2
+set shiftwidth=2
 set autoindent
 set noswapfile
 set termguicolors
-set shiftwidth=4
 set smartindent
-
+augroup JsonToJsonc
+    autocmd! FileType json set filetype=jsonc
+augroup END
+let g:vim_json_conceal=0
+set shiftwidth=2
+set foldmethod=syntax
+let g:prettier#autoformat = 1
+let g:prettier#autoformat_require_pragma = 0
 " ========== REMAPS ==========
 inoremap jj <Esc>
 noremap <C-h> <C-w>h
 noremap <C-j> <C-w>j
 noremap <C-k> <C-w>k
 noremap <C-l> <C-w>l
-
+noremap @@ gT
+noremap [[ gt
+nnoremap <silent> <leader>o :<C-u>call append(line("."),   repeat([""], v:count1))<CR>
+nnoremap <silent> <leader>O :<C-u>call append(line(".")-1, repeat([""], v:count1))<CR>
+nmap <Leader>r :NERDTreeFocus<cr>R<c-w><c-p>
+nnoremap <C-g> :match StatusLineTerm /<C-R><C-W>/<CR>
+" Prev/Next buffer
+nnoremap bb <C-o>
+nnoremap ff <C-i>
 " ========== PLUGIN SETTINGS ===========
 
 " Coc Vim
@@ -134,14 +181,23 @@ nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
 nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+let g:coc_global_extensions = ['coc-solargraph']
 
 " CtrlP
 let g:ctrlp_dotfiles=1
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
+
+"let g:ctrlp_custom_ignore = 'node_modules\|.bundle\|.DS_Store'
+
 let g:ctrlp_prompt_mappings = {
-    \ 'AcceptSelection("e")': ['<2-LeftMouse>'],
-    \ 'AcceptSelection("t")': ['<cr>'],
-    \ }
+	\ 'AcceptSelection("e")': ['<2-LeftMouse>'],
+	\ 'AcceptSelection("t")': ['<cr>'],
+	\ }
+
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/](\.git|node_modules|\.bundle)$',
+  \ 'file': '\v\.(exe|so|dll)$',
+  \ 'link': 'some_bad_symbolic_links',
+  \ }
 
 " Airline
 let g:airline_powerline_fonts = 1
@@ -152,8 +208,11 @@ let g:airline#extensions#tabline#enabled = 1
 " NERDTree
 let NERDTreeShowHidden=1
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-let g:NERDTreeIgnore = ['^node_modules$']
+let g:NERDTreeIgnore = ['^node_modules$', '^\.bundle$', '^\.git$', '^\.DS_Store$', '^\.vscode$']
 nnoremap <C-o> :NERDTreeToggle<CR>
 
 " Nerd Comment
 noremap ,, :call nerdcommenter#Comment(0,"toggle")<C-m>
+
+" FZF
+nnoremap <C-f> :Ag 
