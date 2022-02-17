@@ -7,7 +7,6 @@ Plug 'github/copilot.vim'
 Plug 'https://github.com/ctrlpvim/ctrlp.vim.git'
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'ayu-theme/ayu-vim'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'airblade/vim-gitgutter'
@@ -21,14 +20,26 @@ Plug 'pantharshit00/vim-prisma'
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install --frozen-lockfile --production',
   \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'svelte', 'yaml', 'html'] }
+Plug 'maxmellon/vim-jsx-pretty'
+Plug 'yuezk/vim-js'
+Plug 'agude/vim-eldar'
+Plug 'rainglow/vim'
+Plug 'iamcco/markdown-preview.nvim'
 call plug#end()
 
 
 " ========== COLOR ==========
 
-colorscheme ayu
-let ayucolor="dark"
-
+"colorscheme halflife
+"colorscheme ayu
+"colorscheme abstract
+"colorscheme morass-contrast
+"colorscheme prime-contrast
+"colorscheme waste-contrast
+"colorscheme coffee-contrast
+"colorscheme crisp-contrast
+"colorscheme darkside-contrast
+colorscheme earthsong-contrast
 
 " ========== FEATURES ==========
 
@@ -84,9 +95,7 @@ augroup JsonToJsonc
 augroup END
 let g:vim_json_conceal=0
 set shiftwidth=2
-set foldmethod=syntax
-let g:prettier#autoformat = 1
-let g:prettier#autoformat_require_pragma = 0
+set foldmethod=indent
 " ========== REMAPS ==========
 inoremap jj <Esc>
 noremap <C-h> <C-w>h
@@ -95,13 +104,8 @@ noremap <C-k> <C-w>k
 noremap <C-l> <C-w>l
 noremap @@ gT
 noremap [[ gt
-nnoremap <silent> <leader>o :<C-u>call append(line("."),   repeat([""], v:count1))<CR>
-nnoremap <silent> <leader>O :<C-u>call append(line(".")-1, repeat([""], v:count1))<CR>
-nmap <Leader>r :NERDTreeFocus<cr>R<c-w><c-p>
-nnoremap <C-g> :match StatusLineTerm /<C-R><C-W>/<CR>
-" Prev/Next buffer
-nnoremap bb <C-o>
-nnoremap ff <C-i>
+nnoremap vv viw
+vnoremap vv <Esc>
 " ========== PLUGIN SETTINGS ===========
 
 " Coc Vim
@@ -130,13 +134,13 @@ nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
-    call CocActionAsync('doHover')
-  else
-    execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
+	if (index(['vim','help'], &filetype) >= 0)
+		execute 'h '.expand('<cword>')
+	elseif (coc#rpc#ready())
+		call CocActionAsync('doHover')
+	else
+		execute '!' . &keywordprg . " " . expand('<cword>')
+	endif
 endfunction
 autocmd CursorHold * silent call CocActionAsync('highlight')
 nmap <leader>rn <Plug>(coc-rename)
@@ -181,17 +185,9 @@ nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
 nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-let g:coc_global_extensions = ['coc-solargraph']
 
 " CtrlP
 let g:ctrlp_dotfiles=1
-
-"let g:ctrlp_custom_ignore = 'node_modules\|.bundle\|.DS_Store'
-
-let g:ctrlp_prompt_mappings = {
-	\ 'AcceptSelection("e")': ['<2-LeftMouse>'],
-	\ 'AcceptSelection("t")': ['<cr>'],
-	\ }
 
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '\v[\/](\.git|node_modules|\.bundle)$',
@@ -199,6 +195,13 @@ let g:ctrlp_custom_ignore = {
   \ 'link': 'some_bad_symbolic_links',
   \ }
 
+if executable('rg')
+  set grepprg=rg\ --color=never
+  let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
+  let g:ctrlp_use_caching = 0
+else
+  let g:ctrlp_clear_cache_on_exit = 0
+endif
 " Airline
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#hunks#enabled=0
@@ -215,4 +218,4 @@ nnoremap <C-o> :NERDTreeToggle<CR>
 noremap ,, :call nerdcommenter#Comment(0,"toggle")<C-m>
 
 " FZF
-nnoremap <C-f> :Ag 
+nnoremap <C-f> :Rg 

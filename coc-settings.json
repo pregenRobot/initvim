@@ -1,0 +1,5 @@
+{
+  "codeLens.enable": true,
+	"solargraph.bundlerPath": "/Users/tamimazmain/.rbenv/shims/bundle",
+	"solargraph.checkGemVersion": false
+}
