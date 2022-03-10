@@ -25,6 +25,8 @@ Plug 'yuezk/vim-js'
 Plug 'agude/vim-eldar'
 Plug 'rainglow/vim'
 Plug 'iamcco/markdown-preview.nvim'
+Plug 'NLKNguyen/papercolor-theme'
+Plug 'puremourning/vimspector'
 call plug#end()
 
 
@@ -39,11 +41,11 @@ call plug#end()
 "colorscheme coffee-contrast
 "colorscheme crisp-contrast
 "colorscheme darkside-contrast
-colorscheme earthsong-contrast
+"colorscheme earthsong-contrast
 
 " ========== FEATURES ==========
 
-set number relativenumber
+set number laststatus=2
 syntax on
 set list lcs=tab:\|\ 
 let g:indentLine_setColors = 0
@@ -212,10 +214,16 @@ let g:airline#extensions#tabline#enabled = 1
 let NERDTreeShowHidden=1
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 let g:NERDTreeIgnore = ['^node_modules$', '^\.bundle$', '^\.git$', '^\.DS_Store$', '^\.vscode$']
-nnoremap <C-o> :NERDTreeToggle<CR>
+nnoremap <C-\> :NERDTreeToggle<CR>
 
 " Nerd Comment
 noremap ,, :call nerdcommenter#Comment(0,"toggle")<C-m>
 
 " FZF
 nnoremap <C-f> :Rg 
+
+let g:airline_theme='papercolor'
+colorscheme PaperColor
+set background=dark
+
+let g:vimspector_enable_mappings = 'HUMAN'
