@@ -1,5 +1,10 @@
 {
   "codeLens.enable": true,
 	"solargraph.bundlerPath": "/Users/tamimazmain/.rbenv/shims/bundle",
-	"solargraph.checkGemVersion": false
+	"solargraph.checkGemVersion": false,
+	"eslint.autoFixOnSave": true,
+  "eslint.filetypes": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+	"prettier.disableSuccessMessage": true,
+	"coc.preferences.formatOnType": true,
+  "coc.preferences.jumpCommand": "drop"
 }
