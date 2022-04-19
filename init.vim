@@ -1,10 +1,3 @@
-source ~/.config/nvim/behaviours.vim
-source ~/.config/nvim/appearance.vim
-
-source ~/.config/nvim/cocpref.vim
-source ~/.config/nvim/nerdtreepref.vim
-source ~/.config/nvim/ctrlppref.vim
-
 call plug#begin('~/.vim/plugged')
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'vim-airline/vim-airline'
@@ -20,8 +13,18 @@ Plug 'preservim/nerdcommenter'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'pantharshit00/vim-prisma' " For prisma file
-Plug 'maxmellon/vim-jsx-pretty'
 Plug 'mattn/emmet-vim' " create html through css selector
 Plug 'nvim-lua/plenary.nvim' " lua runtime in vim
+Plug 'savq/melange'
+Plug 'yuezk/vim-js'
+Plug 'maxmellon/vim-jsx-pretty'
+Plug 'peitalin/vim-jsx-typescript'
 call plug#end()
 
+source ~/.config/nvim/behaviours.vim
+source ~/.config/nvim/appearance.vim
+source ~/.config/nvim/cocpref.vim
+source ~/.config/nvim/nerdtreepref.vim
+source ~/.config/nvim/ctrlppref.vim
+source ~/.config/nvim/fzfpref.vim
+source ~/.config/nvim/nerdcommentpref.vim

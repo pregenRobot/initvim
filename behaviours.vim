@@ -11,6 +11,9 @@ set softtabstop=2 " write tabs as 2 spaces
 set shiftwidth=2 " When indenting with >
 set noswapfile
 set number
+set termguicolors
+set iskeyword+="-"
+set iskeyword+="."
 syntax on
 
 " use jsonc for .json files
